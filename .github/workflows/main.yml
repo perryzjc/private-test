@@ -1,0 +1,27 @@
+name: Secret Detection Workflow
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  secret-detection:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install detect-secrets
+        run: |
+          pip install detect-secrets
+          pip install jq
+      - name: Backup secrets baseline
+        run: cp .secrets.baseline .secrets.new
+      - name: Scan repository for secrets
+        run: detect-secrets scan --baseline .secrets.new $(find . -type f ! -name '.secrets.*' ! -path '*/.git*')
+      - name: Compare baseline and newly detected secrets
+        run: |
+          list_secrets() { jq -r '.results | keys[] as $key | "\($key),\(.[$key] | .[] | .hashed_secret)"' "$1" | sort; }
+          if ! diff <(list_secrets .secrets.baseline) <(list_secrets .secrets.new) >&2; then
+            echo "Detected new secrets in the repo" >&2
+            exit 1
+          fi
