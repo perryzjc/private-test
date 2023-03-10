@@ -1,6 +1,6 @@
 #!/bin/bash
 
-detect-secrets scan --.secrets.baseline > .github/workflows/.secrets.new
+detect-secrets scan --exclude-files '.secrets.baseline' > .github/workflows/.secrets.new
 # Check if both baseline and new secrets files exist
 if [ ! -f .secrets.baseline ]; then
     echo "Baseline secrets file does not exist."

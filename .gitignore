@@ -12,5 +12,4 @@
 !.gitignore
 .python-version
 .vscode
-.secrets.baseline
 .github/workflows/.secrets.new
