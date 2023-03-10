@@ -16,7 +16,7 @@ jobs:
           pip install jq
       - name: Scan repository for secrets
         run: |
-          detect-secrets scan > .github/workflows/.secrets.new
+          detect-secrets scan --exclude-files '.secrets.baseline' > .github/workflows/.secrets.new
       - name: Compare baseline and newly detected secrets
         run: |
           # Check if both baseline and new secrets files exist
