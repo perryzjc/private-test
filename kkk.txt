@@ -1,1 +1,0 @@
-Access keys look like AKIAJSIE27KKMHXI3BJQ and secret keys looks like 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 . The access key and session token, if it exists, are passed in the HTTP headers sent in requests to AWS when you use the API.
