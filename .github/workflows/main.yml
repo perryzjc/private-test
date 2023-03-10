@@ -14,14 +14,32 @@ jobs:
         run: |
           pip install detect-secrets
           pip install jq
-      - name: Backup secrets baseline
-        run: cp .secrets.baseline .secrets.new
       - name: Scan repository for secrets
-        run: detect-secrets scan --baseline .secrets.new $(find . -type f ! -name '.secrets.*' ! -path '*/.git*')
+        run: |
+          detect-secrets scan > .github/workflows/.secrets.new
       - name: Compare baseline and newly detected secrets
         run: |
-          list_secrets() { jq -r '.results | keys[] as $key | "\($key),\(.[$key] | .[] | .hashed_secret)"' "$1" | sort; }
-          if ! diff <(list_secrets .secrets.baseline) <(list_secrets .secrets.new) >&2; then
-            echo "Detected new secrets in the repo" >&2
-            exit 1
+          # Check if both baseline and new secrets files exist
+          if [ ! -f .secrets.baseline ]; then
+              echo "Baseline secrets file does not exist."
+              exit 1
+          fi
+          if [ ! -f .github/workflows/.secrets.new ]; then
+              echo "New secrets file does not exist."
+              exit 1
+          fi
+
+          # Extract list of secret hashes from both files
+          list_secrets() { 
+              jq -r '.results | keys[] as $key | "\($key),\(.[$key] | .[] | .hashed_secret)"' "$1" | sort;
+          }
+          baseline_secrets=$(list_secrets .secrets.baseline)
+          new_secrets=$(list_secrets .secrets.new)
+
+          # Compare the lists and output error message if there are any new secrets
+          if [ "$baseline_secrets" != "$new_secrets" ]; then
+              echo "Detected new secrets in the repo"
+              exit 1
+          else
+              echo "No new secrets detected."
           fi
