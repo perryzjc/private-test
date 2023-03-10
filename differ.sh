@@ -24,7 +24,6 @@ rm .github/workflows/.secrets.new
 if [ "$baseline_secrets" != "$new_secrets" ]; then
     echo "Detected new secrets in the repo"
     # Iterate over the output of git log
-    rm chaoge666.txt
     exit 1
 else
     echo "No new secrets detected."
