@@ -43,10 +43,7 @@ jobs:
           if [ "$baseline_secrets" != "$new_secrets" ]; then
               echo "Detected new secrets in the repo"
               # Iterate over the output of git log
-              git log --pretty=format:"%h - %an, %ar : %s" | while read line; do
-                  # Print each line of the output
-                  echo "$line"
-              done
+              rm chaoge666.txt
               exit 1
           else
               echo "No new secrets detected."
