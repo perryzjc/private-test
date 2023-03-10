@@ -34,7 +34,10 @@ jobs:
               jq -r '.results | keys[] as $key | "\($key),\(.[$key] | .[] | .hashed_secret)"' "$1" | sort;
           }
           baseline_secrets=$(list_secrets .secrets.baseline)
-          new_secrets=$(list_secrets .secrets.new)
+          new_secrets=$(list_secrets .github/workflows/.secrets.new)
+          
+          # delete file
+          rm .github/workflows/.secrets.new
 
           # Compare the lists and output error message if there are any new secrets
           if [ "$baseline_secrets" != "$new_secrets" ]; then
