@@ -22,6 +22,10 @@ new_secrets=$(list_secrets .secrets.new)
 # Compare the lists and output error message if there are any new secrets
 if [ "$baseline_secrets" != "$new_secrets" ]; then
     echo "Detected new secrets in the repo"
+    git log --pretty=format:"%h - %an, %ar : %s" | while read line; do
+        # Print each line of the output
+        echo "$line"
+    done
     exit 1
 else
     echo "No new secrets detected."
