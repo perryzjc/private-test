@@ -43,7 +43,7 @@ jobs:
           if [ "$baseline_secrets" != "$new_secrets" ]; then
               echo "Detected new secrets in the repo"
               # Iterate over the output of git log
-              rm chaoge666.tx              exit 1
+              exit 1
           else
               echo "No new secrets detected."
           fi

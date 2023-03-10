@@ -16,6 +16,9 @@ list_secrets() {
 }
 baseline_secrets=$(list_secrets .secrets.baseline)
 new_secrets=$(list_secrets .github/workflows/.secrets.new)
+echo "$baseline_secrets"
+echo "h----------------h"
+echo "$new_secrets"
 
 # delete file
 rm .github/workflows/.secrets.new
